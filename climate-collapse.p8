@@ -124,7 +124,7 @@ function _init()
 	function Seed:new()
 		types = {"Carrot", "Radish"}
 		self.type = types[flr(rnd(#types))+1]
-
+	end
 end
 
 function _update()

@@ -1,7 +1,39 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+
+black = 0
+darkblue = 1
+purple = 2
+darkgreen = 3
+brown = 4
+drakgray = 5
+lightgray = 6
+white = 7
+red = 8
+orange = 9
+yellow = 10
+green = 11
+blue = 12
+lavender = 13
+pink = 14
+peach = 15
+
+function hcenter(s)
+	return 64 - #s * 2
+end
+
+function vcenter()
+	return 61
+end
+
+function intro()
+	print("hello", hcenter("hello"), vcenter(), white)
+end
+
 function _init()
+	cls()
+	intro()
 end
 
 function _update()
@@ -9,6 +41,7 @@ end
 
 function _draw()
 end
+
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

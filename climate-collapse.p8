@@ -51,8 +51,8 @@ function _init()
 	-- intro()
 	cls()
 	Player = {
-		x = 63,
-		y = 63,
+		x = 128,
+		y = 128,
 		fx = false,
 		sprite = 1,
 		hunger = 5,

@@ -29,7 +29,7 @@ end
 
 function intro()
 	starttime = time()
-	`print("hello", hcenter("hello"), vcenter(), white)
+	print("hello", hcenter("hello"), vcenter(), white)
 	while (time() - starttime < 2)
 	do
 	end

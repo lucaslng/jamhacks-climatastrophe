@@ -31,10 +31,6 @@ function clamp(val, lower, upper)
 	return max(lower, min(upper, val))
 end
 
-function dist(x1, y1, x2, y2)
-	return flr(sqrt((abs(x1 - x2) * abs(x1 - x2)) + (abs(y1 - y2) * abs(y1 - y2))))
-end
-
 function intro()
 	local starttime = time()
 	print("hello", hcenter("hello"), vcenter(), white)
@@ -139,7 +135,7 @@ function _update()
 		end
 	end
 
-	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if dist(t.x, t.y, Player.x, Player.y) <= 1 then die("tornado" .. t.x .. " " .. t.y .. "\n" .. Player.x .. " " .. Player.y .. "") end end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 end
 

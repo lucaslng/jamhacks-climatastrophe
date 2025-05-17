@@ -110,9 +110,7 @@ function _init()
 		setmetatable(o, self)
 		self.__index = self
 		return o
-	end
-	
-	
+	end	
 end
 
 function _update()
@@ -123,25 +121,22 @@ function _update()
 	if (btn(2)) then Player:moveup(1) moved = true end
 	if (btn(3)) then Player:movedown(1) moved = true end
 
+	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
+	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
+
 	if moved then
-		if Player.hunger_timer == nil then
-			Player.hunger_timer = 0
-		end
-
-		Player.hunger_timer += 1
-
 		-- hunger drains when moving
+		Player.hunger_timer += 1
 		if Player.hunger_timer >= 300 then
 			Player.hunger = max(0, Player.hunger - 0.5)
 			Player.hunger_timer = 0
 		end
 		
-		-- thirst drains when moving
-		if Player.thirst_timer == nil then Player.thirst_timer = 0 end
-			Player.thirst_timer += 1
-			if Player.thirst_timer >= 150 then
-				Player.thirst = max(0, Player.thirst - 1)
-				Player.thirst_timer = 0
+		-- Thirst drains when moving
+		Player.thirst_timer += 1
+		if Player.thirst_timer >= 150 then
+			Player.thirst = max(0, Player.thirst - 1)
+			Player.thirst_timer = 0
 		end
 	end
 	
@@ -151,10 +146,14 @@ function _update()
 		local y = Player:cely()
 	
 		if mget(x + 1, y) == 8 or
-		   mget(x - 1, y) == 8 or
-		   mget(x, y + 1) == 8 or
-		   mget(x, y - 1) == 8 then
-			Player:drink(1)
+	   mget(x - 1, y) == 8 or
+	   mget(x, y + 1) == 8 or
+	   mget(x, y - 1) == 8 or
+	   mget(x + 1, y + 1) == 8 or
+	   mget(x - 1, y + 1) == 8 or
+	   mget(x + 1, y - 1) == 8 or
+	   mget(x - 1, y - 1) == 8 then
+		Player:drink(1)
 		end
 	end
 

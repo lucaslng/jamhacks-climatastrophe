@@ -50,8 +50,8 @@ function _init()
 	-- intro()
 	cls()
 	Player = {
-		x = 63,
-		y = 63,
+		x = 128,
+		y = 128,
 		fx = false,
 		sprite = 1,
 		hunger = 5,
@@ -116,13 +116,44 @@ function _init()
 end
 
 function _update()
-	if (btn(0)) Player:moveleft(1)
-	if (btn(1)) Player:moveright(1)
-	if (btn(2)) Player:moveup(1)
-	if (btn(3)) Player:movedown(1)
+	local moved = false
+
+	if (btn(0)) then Player:moveleft(1) moved = true end
+	if (btn(1)) then Player:moveright(1) moved = true end
+	if (btn(2)) then Player:moveup(1) moved = true end
+	if (btn(3)) then Player:movedown(1) moved = true end
+
+	if moved then
+		if Player.hunger_timer == nil then
+			Player.hunger_timer = 0
+		end
+
+		Player.hunger_timer += 1
+
+		-- hunger drains when moving
+		if Player.hunger_timer >= 300 then
+			Player.hunger = max(0, Player.hunger - 0.5)
+			Player.hunger_timer = 0
+		end
+		
+		-- thirst drains when moving
+		if Player.thirst_timer == nil then Player.thirst_timer = 0 end
+			Player.thirst_timer += 1
+			if Player.thirst_timer >= 150 then
+				Player.thirst = max(0, Player.thirst - 1)
+				Player.thirst_timer = 0
+		end
+	end
 	
+	-- check if any adjacent tile is water
 	if btn(4) then
-		if mget(Player:celx(), Player:cely()) == 8 then
+		local x = Player:celx()
+		local y = Player:cely()
+	
+		if mget(x + 1, y) == 8 or
+		   mget(x - 1, y) == 8 or
+		   mget(x, y + 1) == 8 or
+		   mget(x, y - 1) == 8 then
 			Player:drink(1)
 		end
 	end

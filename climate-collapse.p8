@@ -77,6 +77,10 @@ function _init()
 end
 
 function _update()
+	if (btn(0)) Player:moveleft(1)
+	if (btn(1)) Player:moveright(1)
+	if (btn(2)) Player:moveup(1)
+	if (btn(3)) Player:movedown(1)
 end
 
 function _draw()

@@ -157,8 +157,15 @@ function _update()
 		end
 	end
 	
-	if btn(4) then		-- z
-		if mget(Player:celx(), Player:cely()) == 8 then
+	-- check if any adjacent tile is water
+	if btn(4) then
+		local x = Player:celx()
+		local y = Player:cely()
+	
+		if mget(x + 1, y) == 8 or
+		   mget(x - 1, y) == 8 or
+		   mget(x, y + 1) == 8 or
+		   mget(x, y - 1) == 8 then
 			Player:drink(1)
 		end
 	end

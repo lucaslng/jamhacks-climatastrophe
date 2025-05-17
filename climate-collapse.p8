@@ -40,22 +40,42 @@ function _init()
 	cls()
 	intro()
 	cls()
-	Player = {x = 0, y = 0, hunger = 10, thirst = 10}
+	Player = {
+        x = 63, 
+        y = 63,
+        fx = false,
+        fy = false,
+        sprite = 1,
+        hunger = 10, 
+        thirst = 10
+    }
 
 	function Player:moveleft(distance)
 		self.x -= distance
+        fx = true
+        fy = false
+        sprite = 1
 	end
 	
 	function Player:moveright(distance)
 		self.x += distance
+        fx = false
+        fy = false
+        sprite = 1
 	end
 	
 	function Player:moveup(distance)
 		self.y -= distance
+        fx = false
+        fy = true
+        sprite = 2
 	end
 	
 	function Player:movedown(distance)
 		self.y += distance
+        fx = false
+        fy = false
+        sprite = 2
 	end
 end
 
@@ -64,6 +84,7 @@ end
 
 function _draw()
 	cls()
+    spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
 
 end
 

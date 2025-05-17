@@ -45,8 +45,8 @@ function _init()
 		y = 63,
 		fx = false,
 		sprite = 1,
-		hunger = 10, 
-		thirst = 10
+		hunger = 5, 
+		thirst = 5,
 	}
 
 	function Player:moveleft(distance)
@@ -87,7 +87,9 @@ function _draw()
 	camera()
 	palt(green, true)
 	palt(black, false)
-	spr(3, 10, 10, 2, 2)
+	for i=0,Player.hunger,1 do
+		spr(3, 3 + i * 9, 3, 2, 2)
+	end
 	palt()
 end
 

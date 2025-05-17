@@ -28,18 +28,43 @@ function vcenter()
 end
 
 function intro()
+	starttime = time()
 	print("hello", hcenter("hello"), vcenter(), white)
+	while (time() - starttime < 2)
+	do
+	end
+
 end
 
 function _init()
 	cls()
 	intro()
+	cls()
+	Player = {x = 0, y = 0, hunger = 10, thirst = 10}
+
+	function Player:moveleft(distance)
+		self.x -= distance
+	end
+	
+	function Player:moveright(distance)
+		self.x += distance
+	end
+	
+	function Player:moveup(distance)
+		self.y -= distance
+	end
+	
+	function Player:movedown(distance)
+		self.y += distance
+	end
 end
 
 function _update()
 end
 
 function _draw()
+	cls()
+
 end
 
 __gfx__

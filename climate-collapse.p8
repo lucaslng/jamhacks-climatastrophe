@@ -6,7 +6,7 @@ darkblue = 1
 purple = 2
 darkgreen = 3
 brown = 4
-drakgray = 5
+darkgray = 5
 lightgray = 6
 white = 7
 red = 8
@@ -17,6 +17,8 @@ blue = 12
 lavender = 13
 pink = 14
 peach = 15
+
+items = {}
 
 function hcenter(s)
 	return 64 - #s * 2
@@ -56,7 +58,7 @@ function _init()
 		fx = false,
 		sprite = 1,
 		hunger = 5,
-		thirst = 4
+		thirst = 4,
 	}
 
 	function Player:moveleft(distance)
@@ -118,6 +120,7 @@ function _update()
 	if (btn(1)) Player:moveright(1)
 	if (btn(2)) Player:moveup(1)
 	if (btn(3)) Player:movedown(1)
+	
 	if btn(4) then
 		if mget(Player:celx(), Player:cely()) == 8 then
 			Player:drink(1)
@@ -187,6 +190,25 @@ function _draw()
 	end
 	palt()
 	-- print("" .. Player.x .. " " .. Player.y .. "", 3, 20, white)
+
+	draw_hotbar()
+end
+
+function draw_hotbar()
+	local slot_size = 8
+	local slot_x = 64 - slot_size / 2
+	local slot_y = 116
+	local slot_col = white
+
+	rectfill(
+		slot_x - 1, 
+		slot_y - 1, 
+		slot_x + slot_size, 
+		slot_y + slot_size, 
+		darkgray
+	)
+
+	rect(slot_x, slot_y, slot_x + slot_size - 1, slot_y + slot_size - 1, slot_col)
 end
 
 __gfx__

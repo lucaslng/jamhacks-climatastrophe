@@ -162,10 +162,7 @@ function _update()
 		local x = Player:celx()
 		local y = Player:cely()
 	
-		if mget(x + 1, y) == 8 or
-		   mget(x - 1, y) == 8 or
-		   mget(x, y + 1) == 8 or
-		   mget(x, y - 1) == 8 then
+		if mget(x + 1, y) == 8 or mget(x - 1, y) == 8 or mget(x, y + 1) == 8 or mget(x, y - 1) == 8 or mget(x + 1, y + 1) == 8 or mget(x - 1, y + 1) == 8 or mget(x + 1, y - 1) == 8 or mget(x - 1, y - 1) == 8 then
 			Player:drink(1)
 		end
 	end

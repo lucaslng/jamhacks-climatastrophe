@@ -68,28 +68,28 @@ function _init()
 	end
 
 	function Player:moveleft()
-		if not fget(mget(flr((self.x - 1) / 8), self:cely()), 7) and not fget(mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)), 7) then
+		if not fget(mget(self:celx() - 1, self:cely() - 1), 7) and not fget(mget(self:celx() - 1, flr((self.y + 7) / 8)), 7) then
 			self.x -= 1
 			self.fx = true
 		end
 	end
 
 	function Player:moveright()
-		if not fget(mget(flr((self.x + 8) / 8), self:cely()), 7) and not fget(mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)), 7) then
+		if not fget(mget(flr((self.x + 7) / 8), self:cely() - 1), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 7) / 8)), 7) then
 			self.x += 1
 			self.fx = false
 		end
 	end
 
 	function Player:moveup()
-		if not fget(mget(self:celx(), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
+		if not fget(mget(flr((self.x - 7) / 8), flr((self.y - 9) / 8)), 7) and not fget(mget(flr((self.x + 6) / 8), flr((self.y - 9) / 8)), 7) then
 			self.y -= 1
 			self.fx = false
 		end
 	end
 
 	function Player:movedown()
-		if not fget(mget(self:celx(), flr((self.y + 8) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 8) / 8)), 7) then
+		if not fget(mget(flr((self.x - 7) / 8), self:cely() + 1), 7) and not fget(mget(flr((self.x + 6) / 8), self:cely() + 1), 7) then
 			self.y += 1
 			self.fx = false
 		end
@@ -242,7 +242,7 @@ function _draw()
 	spr(72, Player.x - 8, Player.y - 8, 2, 2, Player.fx)
 	palt()
 
-	foreach(tornadoes, function(t) spr(9 + (t.lifetime % 8) / 2, t.x, t.y) end)
+	foreach(tornadoes, function(t) spr(128 + (t.lifetime % 4) * 4, t.x - 16, t.y - 16, 4, 4) end)
 
 	foreach(
 		tsunamies, function(t)

@@ -143,6 +143,7 @@ function _update()
 	local moved = false
 
 	if btn(0) then
+<<<<<<< HEAD
 		Player:moveleft(1) moved = true
 	end
 	if btn(1) then
@@ -153,6 +154,18 @@ function _update()
 	end
 	if btn(3) then
 		Player:movedown(1) moved = true
+=======
+		Player:moveleft() moved = true
+	end
+	if btn(1) then
+		Player:moveright() moved = true
+	end
+	if btn(2) then
+		Player:moveup() moved = true
+	end
+	if btn(3) then
+		Player:movedown() moved = true
+>>>>>>> 0c1c7f504e66c366ec00edb77f9c84adefe29750
 	end
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end

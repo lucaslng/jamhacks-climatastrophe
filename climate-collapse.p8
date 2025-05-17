@@ -41,17 +41,17 @@ function _init()
 	-- intro()
 	cls()
 	Player = {
-`		self.x = 63, 
-		self.y = 63,
-		self.fx = false,
-		self.fy = false,
-		self.sprite = 1,
-		self.hunger = 10, 
-		self.thirst = 10
+		x = 63, 
+		y = 63,
+		fx = false,
+		fy = false,
+		sprite = 1,
+		hunger = 10, 
+		thirst = 10
 	}
 
-	function Player:movelef`t(distance)
-		self.self.x -= distance
+	function Player:moveleft(distance)
+		self.x -= distance
 		self.fx = true
 		self.fy = false
 		self.sprite = 1

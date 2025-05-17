@@ -125,6 +125,7 @@ function _init()
 		y = 0,
 		height = 0,
 		fx = false,
+		fx = false,
 		v = 0,
 		lifetime = 0
 	}
@@ -157,6 +158,13 @@ function _update()
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
+
+	if Player.thirst <= 0 then die("You died from being too thirsty!") end
+	if Player.hunger <= 0 then die("You died from hunger!") end
+
+	-- if moved and is_walkable(new_x, new_y) then
+	-- 	Player.x, Player.y = new_x, new_y
+	-- end
 
 	if moved then
 		-- hunger drains when moving

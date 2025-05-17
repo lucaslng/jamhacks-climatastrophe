@@ -126,7 +126,7 @@ function _init()
 		height = 0,
 		fx = false,
 		v = 0,
-		lifetime = 240
+		lifetime = 0
 	}
 
 	tsunamies = {}
@@ -221,17 +221,19 @@ function _update()
 	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
-	if rnd(20) <= 1 then
+	if rnd(100) <= 1 then
 		local tsunami = Tsunami:new()
-		tsunami.x = 136
+		tsunami.x = 120
 		tsunami.y = rnd(96) + 120
-		tsunami.height = rnd(80) + 24
+		tsunami.height = rnd(52) + 8
 		tsunami.v = rnd({ 1, 1, 2})
+		tsunami.lifetime = rnd(200) + 20
 		add(tsunamies, tsunami)
 	end
 
-	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 end)
+	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
+	
 end
 
 function _draw()

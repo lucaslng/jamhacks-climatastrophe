@@ -167,7 +167,6 @@ function _update()
 		end
 
 		-- thirst drains when moving
-		if Player.thirst_timer == nil then Player.thirst_timer = 0 end
 		Player.thirst_timer += 1
 		if Player.thirst_timer >= 150 then
 			Player.thirst = max(0, Player.thirst - 1)

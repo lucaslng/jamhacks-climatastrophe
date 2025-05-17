@@ -56,10 +56,6 @@ function _init()
 		sprite = 1,
 		hunger = 5,
 		thirst = 4,
-		inventory = {},
-		inv_size = 20,
-		selected_slot = 1,
-		show_inventory = false
 	}
 
 	function Player:moveleft(distance)
@@ -99,10 +95,6 @@ function _init()
 		return flr(self.y / 8)
 	end
 
-	function Player:toggle_inventory()
-		self.show_inventory = not self.show_inventory
-	end
-
 	tornadoes = {}
 
 	Tornado = {
@@ -126,10 +118,6 @@ function _update()
 	if (btn(1)) Player:moveright(1)
 	if (btn(2)) Player:moveup(1)
 	if (btn(3)) Player:movedown(1)
-	
-	if btnp(5) then
-		Player:toggle_inventory()
-	end
 	
 	if btn(4) then
 		if mget(Player:celx(), Player:cely()) == 8 then
@@ -180,10 +168,6 @@ function _draw()
 	-- print("" .. Player.x .. " " .. Player.y .. "", 3, 20, white)
 
 	draw_hotbar()
-
-	if Player.show_inventory then
-		draw_inventory()
-	end
 end
 
 function draw_hotbar()
@@ -201,33 +185,6 @@ function draw_hotbar()
 	)
 
 	rect(slot_x, slot_y, slot_x + slot_size - 1, slot_y + slot_size - 1, slot_col)
-end
-
-
-function draw_inventory()
-	local inv_width = 20
-	local inv_height = 30
-	local inv_x = 64 - inv_width/2
-	local inv_y = 32 - inv_height/2
-	local slot_size = 12
-	local cols = 5
-	
-	rectfill(inv_x - 2, inv_y - 10, inv_x + inv_width + 1, inv_y + inv_height + 1, darkgray)
-	print("inventory", inv_x + 16, inv_y - 6, white)
-	
-	for i=1,Player.inv_size do
-		local col = (i-1) % cols
-		local row = flr((i-1) / cols)
-		local slot_x = inv_x + col * slot_size
-		local slot_y = inv_y + row * slot_size
-		local slot_colour = lightgray
-		
-		if i == Player.selected_slot then
-			slot_colour = white
-		end
-		
-		rectfill(slot_x, slot_y, slot_x + slot_size - 1, slot_y + slot_size - 1, slot_colour)
-	end
 end
 
 __gfx__

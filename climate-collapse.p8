@@ -207,12 +207,12 @@ function _update()
 	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
-	if rnd(8) <= 1 then
+	if rnd(20) <= 1 then
 		local tsunami = Tsunami:new()
 		tsunami.x = 136
 		tsunami.y = rnd(96) + 120
 		tsunami.height = rnd(80) + 24
-		tsunami.v = rnd({ 1, 1, 2, 2, 3 })
+		tsunami.v = rnd({ 1, 1, 2})
 		add(tsunamies, tsunami)
 	end
 

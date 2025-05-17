@@ -31,6 +31,10 @@ function clamp(val, lower, upper)
 	return max(lower, min(upper, val))
 end
 
+function dist(x1, y1, x2, y2)
+	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
+end
+
 function intro()
 	starttime = time()
 	print("hello", hcenter("hello"), vcenter(), white)
@@ -79,6 +83,32 @@ function _init()
 	function Player:eat(amount)
 		self.hunger = clamp(self.hunger + amount, 0, 5)
 	end
+
+	function Player:celx()
+		return flr(self.x / 8)
+	end
+
+	function Player:cely()
+		return flr(self.y / 8)
+	end
+
+	tornadoes = {}
+
+	Tornado = {
+		x = 0,
+		y = 0,
+		vx = 0,
+		vy = 0,
+		lifetime = 240
+	}
+
+	function Tornado:new()
+		o = {}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
 end
 
 function _update()
@@ -88,12 +118,25 @@ function _update()
 	if (btn(2)) Player:moveup(1)
 	if (btn(3)) Player:movedown(1)
 	
-	if (btn(4)) then
-		-- stop(mget(flr(Player.x / 8), flr(Player.y / 8)))
-		if (mget(flr(Player.x / 8), flr(Player.y / 8)) == 8) then
+	if btn(4) then
+		if mget(Player:celx(), Player:cely()) == 8 then
 			Player:drink(1)
 		end
 	end
+
+	if rnd({0, 1}) == 0 then
+		local tornado = Tornado:new()
+		tornado.x = Player.x + flr(rnd(160)) - 80
+		tornado.y = Player.y + flr(rnd(160)) - 80
+		if (tornado.x < Player.x - 64 or tornado.x > Player.x + 64) and (tornado.y < Player.y - 64 or tornado.y > Player.y + 64) then
+			tornado.vx = rnd({-2, -1, 0, 1, 2})
+			tornado.vy = rnd({-2, -1, 0, 1, 2})
+			add(tornadoes, tornado)
+		end
+	end
+
+	foreach(tornadoes, function (t) t.x += t.vx; t.y += t.vy; t.lifetime -= 1; end)
+	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
 end
 
@@ -103,6 +146,8 @@ function _draw()
 	camera(Player.x - 63, Player.y - 63)
 	map(0, 0, 0, 0, 128, 32)
 	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx)
+
+	foreach(tornadoes, function(t) spr(1, t.x, t.y); end)
 
 	-- draw hud after resetting camera
 	camera()

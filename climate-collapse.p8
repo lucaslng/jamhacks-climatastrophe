@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-
 black = 0
 darkblue = 1
 purple = 2
@@ -56,43 +55,27 @@ function _init()
 		fx = false,
 		sprite = 1,
 		hunger = 5,
-		thirst = 4
+		thirst = 4,
 	}
 
-	function Player:celx()
-		return flr(self.x / 8)
+	function Player:moveleft(distance)
+		self.x -= distance
+		self.fx = true
 	end
 
-	function Player:cely()
-		return flr(self.y / 8)
+	function Player:moveright(distance)
+		self.x += distance
+		self.fx = false
 	end
 
-	function Player:moveleft()
-		if not fget(mget(flr((self.x - 1) / 8), self:cely()), 7) and not fget(mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)), 7) then
-			self.x -= 1
-			self.fx = true
-		end
+	function Player:moveup(distance)
+		self.y -= distance
+		self.fx = false
 	end
 
-	function Player:moveright()
-		if not fget(mget(flr((self.x + 8) / 8) , self:cely()), 7) and not fget(mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)), 7) then
-			self.x += 1
-			self.fx = false
-		end
-	end
-
-	function Player:moveup()
-		if not fget(mget(self:celx(), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
-			self.y -= 1
-			self.fx = false
-		end
-	end
-
-	function Player:movedown()
-		if not fget(mget(self:celx() , flr((self.y + 8) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 8) / 8)), 7) then
-			self.y += 1
-			self.fx = false
-		end
+	function Player:movedown(distance)
+		self.y += distance
+		self.fx = false
 	end
 
 	function Player:drink(amount)
@@ -102,6 +85,14 @@ function _init()
 
 	function Player:eat(amount)
 		self.hunger = clamp(self.hunger + amount, 0, 5)
+	end
+
+	function Player:celx()
+		return flr(self.x / 8)
+	end
+
+	function Player:cely()
+		return flr(self.y / 8)
 	end
 
 	tornadoes = {}
@@ -120,46 +111,17 @@ function _init()
 		self.__index = self
 		return o
 	end
-
-	Tsunami = {
-		x = 0,
-		y = 0,
-		height = 0,
-		fx = false,
-		v = 0,
-		lifetime = 240
-	}
-
-	tsunamies = {}
-
-	function Tsunami:new()
-		o = {}
-		setmetatable(o, self)
-		self.__index = self
-		return o
-	end
-
-	Seed = {
-		x = 0,
-		y = 0,
-		growthRate = 150,
-		type = "", -- Different types of plants
-		isHarvested = false
-	}
-
-	function Seed:new()
-		types = {"Carrot", "Radish"}
-		self.type = types[flr(rnd(#types))+1]
-	end
+	
+	
 end
 
 function _update()
 	local moved = false
 
-	if (btn(0)) then Player:moveleft() moved = true end
-	if (btn(1)) then Player:moveright() moved = true end
-	if (btn(2)) then Player:moveup() moved = true end
-	if (btn(3)) then Player:movedown() moved = true end
+	if (btn(0)) then Player:moveleft(1) moved = true end
+	if (btn(1)) then Player:moveright(1) moved = true end
+	if (btn(2)) then Player:moveup(1) moved = true end
+	if (btn(3)) then Player:movedown(1) moved = true end
 
 	if moved then
 		if Player.hunger_timer == nil then
@@ -188,7 +150,10 @@ function _update()
 		local x = Player:celx()
 		local y = Player:cely()
 	
-		if mget(x + 1, y) == 8 or mget(x - 1, y) == 8 or mget(x, y + 1) == 8 or mget(x, y - 1) == 8 or mget(x + 1, y + 1) == 8 or mget(x - 1, y + 1) == 8 or mget(x + 1, y - 1) == 8 or mget(x - 1, y - 1) == 8 then
+		if mget(x + 1, y) == 8 or
+		   mget(x - 1, y) == 8 or
+		   mget(x, y + 1) == 8 or
+		   mget(x, y - 1) == 8 then
 			Player:drink(1)
 		end
 	end
@@ -206,25 +171,8 @@ function _update()
 		end
 	end
 
-	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 3 and abs(Player.y - t.y) <= 3) then die("You died to a tornado!") end end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
-
-	if rnd(480) <= 1 then shake = 1.4 end
-
-	-- if rnd({0, 1}) <= 1 then
-	-- 	local tsunami = Tsunami:new()
-	-- end
-end
-
-function doshake()
-	shakex = 16 - rnd(32)
-	shakey = 16 - rnd(32)
-
-	shakex *= shake
-	shakey *= shake
-
-	shake = shake * 0.95
-	if (shake < 0.05) shake = 0
 end
 
 function _draw()
@@ -239,32 +187,16 @@ function _draw()
 
 	-- draw hud after resetting camera
 	camera()
-	
-	local full_thirst = flr(Player.thirst)
-	local half_thirst = Player.thirst - full_thirst >= 0.5
 
-	for i = 1, full_thirst do
-		spr(5, i * 9 - 4, 14, 2, 2) -- full thirst sprite
-	end
-
-	if half_thirst then
-		spr(44, (full + 1) * 9 - 4, 14, 2, 2) -- half thirst sprite
+	for i = 1, Player.thirst, 1 do
+		spr(5, i * 9 - 3, 14, 2, 2)
 	end
 
 	palt(green, true)
 	palt(black, false)
-	
-	local full_hunger = flr(Player.hunger)
-	local half_hunger = Player.hunger - full_hunger >= 0.5
-	
-	for i = 1, full_hunger do
-		spr(3, i * 9 - 4, 3, 2, 2) -- full hunger sprite
+	for i = 1, Player.hunger, 1 do
+		spr(3, i * 9 - 4, 3, 2, 2)
 	end
-	
-	if half_thirst then
-		spr(37, (full + 1) * 9 - 4, 3, 2, 2) -- half hunger sprite
-	end	
-
 	palt()
 	-- print("" .. Player.x .. " " .. Player.y .. "", 3, 20, white)
 
@@ -276,12 +208,12 @@ function draw_hotbar()
 	local slot_x = 64 - slot_size / 2
 	local slot_y = 116
 	local slot_col = white
-	
+
 	rectfill(
-		slot_x - 1,
-		slot_y - 1,
-		slot_x + slot_size,
-		slot_y + slot_size,
+		slot_x - 1, 
+		slot_y - 1, 
+		slot_x + slot_size, 
+		slot_y + slot_size, 
 		darkgray
 	)
 

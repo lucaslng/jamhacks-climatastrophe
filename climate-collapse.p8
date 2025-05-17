@@ -85,6 +85,8 @@ end
 
 function _draw()
 	cls()
+	camera(Player.x - 63, Player.y - 63)
+	map(0, 0, 0, 0, 128, 32)
 	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
 end
 

@@ -44,7 +44,6 @@ function _init()
 		x = 63, 
 		y = 63,
 		fx = false,
-		fy = false,
 		sprite = 1,
 		hunger = 10, 
 		thirst = 10
@@ -53,29 +52,21 @@ function _init()
 	function Player:moveleft(distance)
 		self.x -= distance
 		self.fx = true
-		self.fy = false
-		self.sprite = 1
 	end
 	
 	function Player:moveright(distance)
 		self.x += distance
 		self.fx = false
-		self.fy = false
-		self.sprite = 1
 	end
 	
 	function Player:moveup(distance)
 		self.y -= distance
 		self.fx = false
-		self.fy = true
-		self.prite = 2
 	end
 	
 	function Player:movedown(distance)
 		self.y += distance
 		self.fx = false
-		self.fy = false
-		self.sprite = 2
 	end
 end
 
@@ -91,7 +82,7 @@ function _draw()
 
 	camera(Player.x - 63, Player.y - 63)
 	map(0, 0, 0, 0, 128, 32)
-	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
+	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx)
 
 	camera()
 	palt(green, true)

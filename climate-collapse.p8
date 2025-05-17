@@ -80,10 +80,16 @@ function _init()
 end
 
 function _update()
+	if (btn(0)) Player:moveleft(1)
+	if (btn(1)) Player:moveright(1)
+	if (btn(2)) Player:moveup(1)
+	if (btn(3)) Player:movedown(1)
 end
 
 function _draw()
 	cls()
+	camera(Player.x - 63, Player.y - 63)
+	map(0, 0, 0, 0, 128, 32)
 	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
 
 end

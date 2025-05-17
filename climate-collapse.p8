@@ -55,27 +55,43 @@ function _init()
 		fx = false,
 		sprite = 1,
 		hunger = 5,
-		thirst = 4,
+		thirst = 4
 	}
 
-	function Player:moveleft(distance)
-		self.x -= distance
-		self.fx = true
+	function Player:celx()
+		return flr(self.x / 8)
 	end
 
-	function Player:moveright(distance)
-		self.x += distance
-		self.fx = false
+	function Player:cely()
+		return flr(self.y / 8)
 	end
 
-	function Player:moveup(distance)
-		self.y -= distance
-		self.fx = false
+	function Player:moveleft()
+		if not fget(mget(flr((self.x - 1) / 8), self:cely()), 7) and not fget(mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)), 7) then
+			self.x -= 1
+			self.fx = true
+		end
 	end
 
-	function Player:movedown(distance)
-		self.y += distance
-		self.fx = false
+	function Player:moveright()
+		if not fget(mget(flr((self.x + 8) / 8), self:cely()), 7) and not fget(mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)), 7) then
+			self.x += 1
+			self.fx = false
+		end
+	end
+
+	function Player:moveup()
+		if not fget(mget(self:celx(), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
+			self.y -= 1
+			self.fx = false
+		end
+	end
+
+	function Player:movedown()
+		if not fget(mget(self:celx(), flr((self.y + 8) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 8) / 8)), 7) then
+			self.y += 1
+			self.fx = false
+		end
 	end
 
 	function Player:drink(amount)
@@ -85,14 +101,6 @@ function _init()
 
 	function Player:eat(amount)
 		self.hunger = clamp(self.hunger + amount, 0, 5)
-	end
-
-	function Player:celx()
-		return flr(self.x / 8)
-	end
-
-	function Player:cely()
-		return flr(self.y / 8)
 	end
 
 	tornadoes = {}
@@ -110,16 +118,42 @@ function _init()
 		setmetatable(o, self)
 		self.__index = self
 		return o
-	end	
+	end
+
+	Tsunami = {
+		x = 0,
+		y = 0,
+		height = 0,
+		fx = false,
+		v = 0,
+		lifetime = 240
+	}
+
+	tsunamies = {}
+
+	function Tsunami:new()
+		o = {}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
 end
 
 function _update()
 	local moved = false
 
-	if (btn(0)) then Player:moveleft(1) moved = true end
-	if (btn(1)) then Player:moveright(1) moved = true end
-	if (btn(2)) then Player:moveup(1) moved = true end
-	if (btn(3)) then Player:movedown(1) moved = true end
+	if btn(0) then
+		Player:moveleft(1) moved = true
+	end
+	if btn(1) then
+		Player:moveright(1) moved = true
+	end
+	if btn(2) then
+		Player:moveup(1) moved = true
+	end
+	if btn(3) then
+		Player:movedown(1) moved = true
+	end
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
@@ -131,15 +165,16 @@ function _update()
 			Player.hunger = max(0, Player.hunger - 0.5)
 			Player.hunger_timer = 0
 		end
-		
-		-- Thirst drains when moving
+
+		-- thirst drains when moving
+		if Player.thirst_timer == nil then Player.thirst_timer = 0 end
 		Player.thirst_timer += 1
 		if Player.thirst_timer >= 150 then
 			Player.thirst = max(0, Player.thirst - 1)
 			Player.thirst_timer = 0
 		end
 	end
-	
+
 	-- check if any adjacent tile is water
 	if btn(4) then
 		local x = Player:celx()
@@ -172,6 +207,18 @@ function _update()
 
 	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
+
+	if rnd(8) <= 1 then
+		local tsunami = Tsunami:new()
+		tsunami.x = 136
+		tsunami.y = rnd(96) + 120
+		tsunami.height = rnd(80) + 24
+		tsunami.v = rnd({ 1, 1, 2, 2, 3 })
+		add(tsunamies, tsunami)
+	end
+
+	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 end)
+	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
 end
 
 function _draw()
@@ -183,6 +230,14 @@ function _draw()
 
 	palt()
 	foreach(tornadoes, function(t) spr(9 + (t.lifetime % 8) / 2, t.x, t.y) end)
+
+	foreach(
+		tsunamies, function(t)
+			for i = t.y, t.y + t.height, 8 do
+				spr(13, t.x, i, 2, 2)
+			end
+		end
+	)
 
 	-- draw hud after resetting camera
 	camera()
@@ -209,10 +264,10 @@ function draw_hotbar()
 	local slot_col = white
 
 	rectfill(
-		slot_x - 1, 
-		slot_y - 1, 
-		slot_x + slot_size, 
-		slot_y + slot_size, 
+		slot_x - 1,
+		slot_y - 1,
+		slot_x + slot_size,
+		slot_y + slot_size,
 		darkgray
 	)
 

@@ -154,12 +154,9 @@ function _update()
 	if btn(3) then
 		Player:movedown() moved = true
 	end
-<<<<<<< HEAD
-=======
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
->>>>>>> 450c26e35a784d323b1424212dca61facc014d4c
 
 	if moved then
 		-- hunger drains when moving

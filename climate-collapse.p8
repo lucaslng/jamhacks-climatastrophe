@@ -66,21 +66,21 @@ function _init()
 	end
 
 	function Player:moveleft()
-		if not fget(mget(flr((self.x - 1) / 8), self:cely()), 7) and not fget(mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)), 7) then
+		if not fget(mget(self:celx() - 1, self:cely() - 1), 7) and not fget(mget(self:celx() - 1, flr((self.y + 7) / 8)), 7) then
 			self.x -= 1
 			self.fx = true
 		end
 	end
 
 	function Player:moveright()
-		if not fget(mget(flr((self.x + 8) / 8), self:cely()), 7) and not fget(mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)), 7) then
+		if not fget(mget(flr((self.x + 7) / 8), self:cely() - 1), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 7) / 8)), 7) then
 			self.x += 1
 			self.fx = false
 		end
 	end
 
 	function Player:moveup()
-		if not fget(mget(self:celx(), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
+		if not fget(mget(flr((self.x - 7) / 8), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
 			self.y -= 1
 			self.fx = false
 		end

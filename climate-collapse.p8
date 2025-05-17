@@ -41,7 +41,7 @@ function _init()
 	intro()
 	cls()
 	Player = {
-		self.x = 63, 
+`		self.x = 63, 
 		self.y = 63,
 		self.fx = false,
 		self.fy = false,

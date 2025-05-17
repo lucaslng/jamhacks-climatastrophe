@@ -125,7 +125,7 @@ function _init()
 		y = 0,
 		vx = 0,
 		vy = 0,
-		lifetime = 240
+		lifetime = 180
 	}
 
 	function Tornado:new()
@@ -149,7 +149,7 @@ function _update()
 		end
 	end
 
-	if rnd({0, 1}) >= 0 then
+	if rnd({0, 1, 2}) <= 1 then
 		local tornado = Tornado:new()
 		tornado.x = Player.x + flr(rnd(160)) - 80
 		tornado.y = Player.y + flr(rnd(160)) - 80

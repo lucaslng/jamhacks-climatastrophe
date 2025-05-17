@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-
 black = 0
 darkblue = 1
 purple = 2
@@ -33,39 +32,19 @@ function clamp(val, lower, upper)
 end
 
 function dist(x1, y1, x2, y2)
-	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
-end
-
-function rspr(sx,sy,x,y,a,w)
-	local ca,sa=cos(a),sin(a)
-	local srcx,srcy
-	local ddx0,ddy0=ca,sa
-	local mask=shl(0xfff8,(w-1))
-	w*=4
-	ca*=w-0.5
-	sa*=w-0.5
-	local dx0,dy0=sa-ca+w,-ca-sa+w
-	w=2*w-1
-	for ix=0,w do
-		srcx,srcy=dx0,dy0
-		for iy=0,w do
-			if band(bor(srcx,srcy),mask)==0 then
-				local c=sget(sx+srcx,sy+srcy)
-				pset(x+ix,y+iy,c)
-			end
-			srcx-=ddy0
-			srcy+=ddx0
-		end
-		dx0+=ddx0
-		dy0+=ddy0
-	end
+	return flr(sqrt((abs(x1 - x2) * abs(x1 - x2)) + (abs(y1 - y2) * abs(y1 - y2))))
 end
 
 function intro()
-	starttime = time()
+	local starttime = time()
 	print("hello", hcenter("hello"), vcenter(), white)
 	while (time() - starttime < 2) do
 	end
+end
+
+function die(message)
+	cls()
+	stop(message, hcenter(message), vcenter(), red)
 end
 
 function _init()
@@ -121,8 +100,8 @@ function _init()
 	tornadoes = {}
 
 	Tornado = {
-		x = 0,
-		y = 0,
+		x = -10000,
+		y = -10000,
 		vx = 0,
 		vy = 0,
 		lifetime = 180
@@ -134,7 +113,6 @@ function _init()
 		self.__index = self
 		return o
 	end
-
 end
 
 function _update()
@@ -142,29 +120,27 @@ function _update()
 	if (btn(1)) Player:moveright(1)
 	if (btn(2)) Player:moveup(1)
 	if (btn(3)) Player:movedown(1)
-	
 	if btn(4) then
 		if mget(Player:celx(), Player:cely()) == 8 then
 			Player:drink(1)
 		end
 	end
 
-	if rnd({0, 1, 2}) <= 1 then
+	if rnd({ 0, 1, 2 }) <= 1 then
 		local tornado = Tornado:new()
 		tornado.x = Player.x + flr(rnd(160)) - 80
 		tornado.y = Player.y + flr(rnd(160)) - 80
 		if (tornado.x < Player.x - 64 or tornado.x > Player.x + 64) and (tornado.y < Player.y - 64 or tornado.y > Player.y + 64) then
-			tornado.vx = rnd({-2, -1, 0, 1, 2})
-			tornado.vy = rnd({-2, -1, 0, 1, 2})
+			tornado.vx = rnd({ -2, -1, 0, 1, 2 })
+			tornado.vy = rnd({ -2, -1, 0, 1, 2 })
 			if (tornado.vx != 0 or tornado.vy != 0) then
 				add(tornadoes, tornado)
 			end
 		end
 	end
 
-	foreach(tornadoes, function (t) t.x += t.vx; t.y += t.vy; t.lifetime -= 1; end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if dist(t.x, t.y, Player.x, Player.y) <= 1 then die("tornado" .. t.x .. " " .. t.y .. "\n" .. Player.x .. " " .. Player.y .. "") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
-
 end
 
 function _draw()
@@ -175,7 +151,7 @@ function _draw()
 	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx)
 
 	palt()
-	foreach(tornadoes, function(t) spr(9 + (t.lifetime % 8) / 2, t.x, t.y); end)
+	foreach(tornadoes, function(t) spr(9 + (t.lifetime % 8) / 2, t.x, t.y) end)
 
 	-- draw hud after resetting camera
 	camera()

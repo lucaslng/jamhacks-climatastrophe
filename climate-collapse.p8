@@ -124,7 +124,6 @@ function _init()
 		x = 0,
 		y = 0,
 		height = 0,
-		fx = false,
 		v = 0,
 		lifetime = 0
 	}

@@ -44,6 +44,9 @@ function die(message)
 end
 
 function _init()
+	shake = 0
+	shakex = 0
+	shakey = 0
 	-- cls()
 	-- intro()
 	cls()
@@ -78,7 +81,6 @@ function _init()
 
 	function Player:drink(amount)
 		self.thirst = clamp(self.thirst + amount, 0, 5)
-		-- self.thirst += amount
 	end
 
 	function Player:eat(amount)
@@ -135,14 +137,36 @@ function _update()
 		end
 	end
 
+	if rnd(480) <= 1 then shake = 2 end
+
 	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 end
 
+function doshake()
+	 -- this function does the
+ -- shaking
+ -- first we generate two
+ -- random numbers between
+ -- -16 and +16
+ shakex=16-rnd(32)
+ shakey=16-rnd(32)
+
+ -- then we apply the shake
+ -- strength
+ shakex*=shake
+ shakey*=shake
+ 
+ -- finally, fade out the shake
+ -- reset to 0 when very low
+ shake = shake*0.95
+ if (shake<0.05) shake=0
+end
+
 function _draw()
 	cls()
-
-	camera(Player.x - 63, Player.y - 63)
+	doshake()
+	camera(Player.x - 63 + shakex, Player.y - 63 + shakey)
 	map(0, 0, 0, 0, 128, 32)
 	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx)
 
@@ -150,7 +174,7 @@ function _draw()
 	foreach(tornadoes, function(t) spr(9 + (t.lifetime % 8) / 2, t.x, t.y) end)
 
 	-- draw hud after resetting camera
-	camera()
+	camera(shakex, shakey)
 
 	for i = 1, Player.thirst, 1 do
 		spr(5, i * 9 - 3, 14, 2, 2)

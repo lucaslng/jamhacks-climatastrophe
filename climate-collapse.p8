@@ -116,10 +116,10 @@ end
 function _update()
 	local moved = false
 
-	if (btn(0)) then Player:moveleft() moved = true end
-	if (btn(1)) then Player:moveright() moved = true end
-	if (btn(2)) then Player:moveup() moved = true end
-	if (btn(3)) then Player:movedown() moved = true end
+	if (btn(0)) then Player:moveleft(1) moved = true end
+	if (btn(1)) then Player:moveright(1) moved = true end
+	if (btn(2)) then Player:moveup(1) moved = true end
+	if (btn(3)) then Player:movedown(1) moved = true end
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end

@@ -48,6 +48,9 @@ end
 function _init()
 	-- cls()
 	-- intro()
+	shake = 0
+	shakex = 0
+	shakey = 0
 	cls()
 	sfx(0)
 	sfx(1)
@@ -97,7 +100,6 @@ function _init()
 
 	function Player:drink(amount)
 		self.thirst = clamp(self.thirst + amount, 0, 5)
-		-- self.thirst += amount
 	end
 
 	function Player:eat(amount)
@@ -229,13 +231,24 @@ function _update()
 
 	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("You died to a tsunami!") end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
+
+	if rnd(300) <= 1 then shake = 1.4 end
 	
 end
 
+function doshake()
+	shakex=16-rnd(32)
+	shakey=16-rnd(32)
+	shakex*=shake
+	shakey*=shake
+	shake*=0.95
+	if (shake<0.05) shake=0
+ end
+
 function _draw()
 	cls()
-
-	camera(Player.x - 63, Player.y - 63)
+	doshake()
+	camera(Player.x - 64 + shakex, Player.y - 64 + shakey)
 	map(0, 0, 0, 0, 200, 200)
 	palt(black, false)
 	palt(green, true)
@@ -254,7 +267,7 @@ function _draw()
 	)
 
 	-- draw hud after resetting camera
-	camera()
+	camera(shakex, shakey)
 
 	local full_thirst = flr(Player.thirst)
 	local half_thirst = Player.thirst - full_thirst >= 0.5

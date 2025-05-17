@@ -213,7 +213,7 @@ function _update()
 		end
 	end
 
-	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("You died to a tornado!") end end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 2 and abs(Player.y - t.y) <= 2) then die("you died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
 	if rnd(100) <= 1 then
@@ -226,7 +226,7 @@ function _update()
 		add(tsunamies, tsunami)
 	end
 
-	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end end)
+	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("you died to a tsunami!") end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
 	
 end

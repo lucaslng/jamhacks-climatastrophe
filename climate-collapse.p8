@@ -112,6 +112,19 @@ function _init()
 		self.__index = self
 		return o
 	end
+
+	Seed = {
+		x = 0,
+		y = 0,
+		growthRate = 150,
+		type = "", -- Different types of plants
+		isHarvested = false
+	}
+
+	function Seed:new()
+		types = {"Carrot", "Radish"}
+		self.type = types[flr(rnd(#types))+1]
+
 end
 
 function _update()
@@ -216,7 +229,7 @@ function draw_hotbar()
 	local slot_x = 64 - slot_size / 2
 	local slot_y = 116
 	local slot_col = white
-
+	
 	rectfill(
 		slot_x - 1, 
 		slot_y - 1, 

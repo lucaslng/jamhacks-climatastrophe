@@ -67,28 +67,28 @@ function _init()
 	end
 
 	function Player:moveleft()
-		if not fget(mget(flr((self.x - 1) / 8), self:cely()), 7) and not fget(mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)), 7) then
+		if mget(flr((self.x - 1) / 8), self:cely()) ~= 7 and mget(flr((self.x - 1) / 8), flr((self.y + 7) / 8)) ~= 7 then
 			self.x -= 1
 			self.fx = true
 		end
 	end
 
 	function Player:moveright()
-		if not fget(mget(flr((self.x + 8) / 8), self:cely()), 7) and not fget(mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)), 7) then
+		if mget(flr((self.x + 8) / 8), self:cely()) ~= 7 and mget(flr((self.x + 8) / 8), flr((self.y + 7) / 8)) ~= 7 then
 			self.x += 1
 			self.fx = false
 		end
 	end
 
 	function Player:moveup()
-		if not fget(mget(self:celx(), flr((self.y - 1) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)), 7) then
+		if mget(self:celx(), flr((self.y - 1) / 8)) ~= 7 and mget(flr((self.x + 7) / 8), flr((self.y - 1) / 8)) ~= 7 then
 			self.y -= 1
 			self.fx = false
 		end
 	end
 
 	function Player:movedown()
-		if not fget(mget(self:celx(), flr((self.y + 8) / 8)), 7) and not fget(mget(flr((self.x + 7) / 8), flr((self.y + 8) / 8)), 7) then
+		if mget(self:celx(), flr((self.y + 8) / 8)) ~= 7 and mget(flr((self.x + 7) / 8), flr((self.y + 8) / 8)) ~= 7 then
 			self.y += 1
 			self.fx = false
 		end
@@ -139,24 +139,38 @@ function _init()
 	end
 end
 
+-- function is_walkable(x, y)
+--     local tile = mget(flr(x/8), flr(y/8))
+--     return tile ~= 7
+-- end
+
 function _update()
 	local moved = false
+	-- local new_x, new_y = Player.x, Player.y
 
 	if btn(0) then
-		Player:moveleft() moved = true
+		Player:moveleft() 
+		moved = true
 	end
 	if btn(1) then
-		Player:moveright() moved = true
+		Player:moveright() 
+		moved = true
 	end
 	if btn(2) then
-		Player:moveup() moved = true
+		Player:moveup() 
+		moved = true
 	end
 	if btn(3) then
-		Player:movedown() moved = true
+		Player:movedown() 
+		moved = true
 	end
 
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
+
+	-- if moved and is_walkable(new_x, new_y) then
+	-- 	Player.x, Player.y = new_x, new_y
+	-- end
 
 	if moved then
 		-- hunger drains when moving

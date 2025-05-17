@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-
 black = 0
 darkblue = 1
 purple = 2
@@ -30,10 +29,8 @@ end
 function intro()
 	starttime = time()
 	print("hello", hcenter("hello"), vcenter(), white)
-	while (time() - starttime < 2)
-	do
+	while (time() - starttime < 2) do
 	end
-
 end
 
 function _init()
@@ -41,41 +38,41 @@ function _init()
 	intro()
 	cls()
 	Player = {
-        x = 63, 
-        y = 63,
-        fx = false,
-        fy = false,
-        sprite = 1,
-        hunger = 10, 
-        thirst = 10
-    }
+		x = 63,
+		y = 63,
+		fx = false,
+		fy = false,
+		sprite = 1,
+		hunger = 10,
+		thirst = 10
+	}
 
 	function Player:moveleft(distance)
 		self.x -= distance
-        fx = true
-        fy = false
-        sprite = 1
+		fx = true
+		fy = false
+		sprite = 1
 	end
-	
+
 	function Player:moveright(distance)
 		self.x += distance
-        fx = false
-        fy = false
-        sprite = 1
+		fx = false
+		fy = false
+		sprite = 1
 	end
-	
+
 	function Player:moveup(distance)
 		self.y -= distance
-        fx = false
-        fy = true
-        sprite = 2
+		fx = false
+		fy = true
+		sprite = 2
 	end
-	
+
 	function Player:movedown(distance)
 		self.y += distance
-        fx = false
-        fy = false
-        sprite = 2
+		fx = false
+		fy = false
+		sprite = 2
 	end
 end
 
@@ -84,8 +81,7 @@ end
 
 function _draw()
 	cls()
-    spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
-
+	spr(Player.sprite, Player.x, Player.y, 1, 1, Player.fx, Player.fy)
 end
 
 __gfx__

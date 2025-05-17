@@ -175,15 +175,15 @@ function _update()
 	if moved then
 		-- hunger drains when moving
 		Player.hunger_timer += 1
-		if Player.hunger_timer >= 300 then
+		if Player.hunger_timer >= 350 then
 			Player.hunger = max(0, Player.hunger - 0.5)
 			Player.hunger_timer = 0
 		end
 
 		-- thirst drains when moving
 		Player.thirst_timer += 1
-		if Player.thirst_timer >= 150 then
-			Player.thirst = max(0, Player.thirst - 1)
+		if Player.thirst_timer >= 200 then
+			Player.thirst = max(0, Player.thirst - 0.5)
 			Player.thirst_timer = 0
 		end
 	end

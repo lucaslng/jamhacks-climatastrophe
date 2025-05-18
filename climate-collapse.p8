@@ -336,7 +336,6 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 8 then
-			sfx(2)
 			die("bad water", "You drank contaminated water.")
 		elseif mget(x, y) == 102 then
 			Player:drink(1)

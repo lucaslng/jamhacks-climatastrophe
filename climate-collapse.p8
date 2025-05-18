@@ -210,7 +210,7 @@ function _update()
 		end
 	end
 
-	if rnd({ 0, 1, 2 }) <= 1 then
+	if rnd({ 0, 1 }) == 0 then
 		local tornado = Tornado:new()
 		tornado.x = Player.x + flr(rnd(160)) - 80
 		tornado.y = Player.y + flr(rnd(160)) - 80

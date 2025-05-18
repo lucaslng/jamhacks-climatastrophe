@@ -106,6 +106,10 @@ function _init()
 		self.hunger = clamp(self.hunger + amount, 0, 5)
 	end
 
+	function Player:plant(amount)
+		
+	end
+
 	tornadoes = {}
 
 	Tornado = {
@@ -167,7 +171,7 @@ function _update()
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
 
-	if Player.thirst <= 0 then die("you died from being too thirsty!") end
+	if Player.thirst <= 0 then die("you died from lack of water") end
 	if Player.hunger <= 0 then die("you died from hunger!") end
 
 	if moved then
@@ -186,20 +190,23 @@ function _update()
 		end
 	end
 
-	-- check if any adjacent tile is water
+	-- drink only if player is standing on water
 	if btn(4) then
 		local x = Player:celx()
 		local y = Player:cely()
-	
-		if mget(x + 1, y) == 8 or
-	   mget(x - 1, y) == 8 or
-	   mget(x, y + 1) == 8 or
-	   mget(x, y - 1) == 8 or
-	   mget(x + 1, y + 1) == 8 or
-	   mget(x - 1, y + 1) == 8 or
-	   mget(x + 1, y - 1) == 8 or
-	   mget(x - 1, y - 1) == 8 then
-		Player:drink(1)
+
+		if mget(x, y) == 8 then
+			Player:drink(1)
+		end
+	end
+
+	-- plant only if the player is standing on dirt
+	if btn(4) then
+		local x = Player:celx()
+		local y = Player:cely()
+
+		if mget(x, y) == 39 or mget(x, y) == 40 or mget(x, y) == 55 or mget(x, y) == 56 then
+			Player:plant()
 		end
 	end
 

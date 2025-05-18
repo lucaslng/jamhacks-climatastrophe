@@ -18,7 +18,8 @@ lavender = 13
 pink = 14
 peach = 15
 
-items = {}
+SEED_RADISH = 1
+SEED_CARROT = 2
 
 function hcenter(s)
 	return 64 - #s * 2
@@ -59,8 +60,19 @@ function _init()
 		y = 208,
 		fx = false,
 		hunger = 5,
-		thirst = 4
+		thirst = 5,
+		hotbar = {},
 	}
+
+	-- randomly give player either 3 radish seeds or 3 carrot seeds
+	local seed_type = flr(rnd(2)) + 1
+	if seed_type == SEED_RADISH then
+		Player.hotbar[SEED_RADISH] = 3
+		Player.current_seed = SEED_RADISH
+	else
+		Player.hotbar[SEED_CARROT] = 3
+		Player.current_seed = SEED_CARROT
+	end
 
 	function Player:celx()
 		return flr(self.x / 8)
@@ -106,10 +118,60 @@ function _init()
 		self.hunger = clamp(self.hunger + amount, 0, 5)
 	end
 
-	function Player:plant(amount)
+	function Player:plant()
+		local cx = self:celx()
+		local cy = self:cely()
 		
+		for i=1,#plants do
+			if plants[i].x == cx and plants[i].y == cy then
+				return
+			end
+		end
+		
+		-- check if player has seeds to plant
+		if self.current_seed == SEED_RADISH and (self.hotbar[SEED_RADISH] or 0) <= 0 then
+			return
+		elseif self.current_seed == SEED_CARROT and (self.hotbar[SEED_CARROT] or 0) <= 0 then
+			return
+		end
+
+		local seed = {}
+		seed.x = cx
+		seed.y = cy
+		seed.growth = 0
+		seed.growthRate = 350
+		seed.maxGrowth = 300
+		seed.stage = 1
+
+		if self.current_seed == SEED_RADISH then
+			seed.type = "Radish"
+			self.hotbar[SEED_RADISH] -= 1
+		else
+			seed.type = "Carrot"
+			self.hotbar[SEED_CARROT] -= 1
+		end
+		
+		add(plants, seed)
 	end
 
+	function Player:harvest()
+		local cx = self:celx()
+		local cy = self:cely()
+		
+		for i=#plants,1,-1 do
+			if plants[i].x == cx and plants[i].y == cy and plants[i].stage == 3 then
+				self:eat(1)
+				self:drink(1)
+				Player.hotbar[SEED_RADISH] += 1
+				deli(plants, i)
+				return true
+			end
+		end
+		
+		return false
+	end
+
+	plants = {}
 	tornadoes = {}
 
 	Tornado = {
@@ -184,8 +246,8 @@ function _update()
 
 		-- thirst drains when moving
 		Player.thirst_timer += 1
-		if Player.thirst_timer >= 150 then
-			Player.thirst = max(0, Player.thirst - 1)
+		if Player.thirst_timer >= 215 then
+			Player.thirst = max(0, Player.thirst - 0.5)
 			Player.thirst_timer = 0
 		end
 	end
@@ -208,7 +270,26 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 35 or mget(x, y) == 36 then
-			Player:plant()
+			if Player.hotbar[SEED_RADISH] > 0 or Player.hotbar[SEED_CARROT] then
+				Player:plant()
+			end
+		end
+	end
+
+	-- harvest and eat plant
+	if btn(5) then
+		Player:harvest()
+	end
+
+	-- update plants
+	for i=1,#plants do
+		local plant = plants[i]
+		if plant.stage < 3 then
+			plant.growth += 1
+			if plant.growth >= plant.growthRate then
+				plant.stage += 1
+				plant.growth = 0
+			end
 		end
 	end
 
@@ -259,6 +340,25 @@ function _draw()
 	doshake()
 	camera(Player.x - 64 + shakex, Player.y - 64 + shakey)
 	map(0, 0, 0, 0, 200, 200)
+
+	-- draw plants
+	for i=1,#plants do
+		local plant = plants[i]
+		local sprite = 0
+		
+		if plant.type == "Carrot" then
+			if plant.stage == 1 then sprite = 87
+			elseif plant.stage == 2 then sprite = 71
+			else sprite = 117 end
+		else
+			if plant.stage == 1 then sprite = 86
+			elseif plant.stage == 2 then sprite = 70
+			else sprite = 116 end
+		end
+		
+		spr(sprite, plant.x * 8, plant.y * 8)
+	end
+
 	palt(black, false)
 	palt(green, true)
 	spr(68, Player.x - 8, Player.y - 8, 2, 2, Player.fx)
@@ -331,6 +431,13 @@ function draw_hotbar()
 	)
 
 	rect(slot_x, slot_y, slot_x + slot_size - 1, slot_y + slot_size - 1, slot_col)
+
+	-- draw selected seed in the hotbar
+	if Player.hotbar[SEED_RADISH] and Player.hotbar[SEED_RADISH] > 0 then
+		spr(86, slot_x, slot_y)
+	elseif Player.hotbar[SEED_CARROT] and Player.hotbar[SEED_CARROT] > 0 then
+		spr(87, slot_x, slot_y)
+	end
 end
 
 __gfx__

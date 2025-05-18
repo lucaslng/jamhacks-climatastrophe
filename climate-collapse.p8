@@ -23,15 +23,15 @@ items = {}
 -- facts are all found by ChatGPT --
 
 funFactsHunger = {
-"Undernutrition underlies 45% of all child deaths globally about 3.1 million children under five each year.",
-"Six million children die from hunger every year, making malnutrition the single largest contributor to child mortality.",
-"Protein energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies another 84 000."
+	"Undernutrition underlies 45% of all child deaths globally about 3.1 million children under five each year.",
+	"Six million children die from hunger every year, making malnutrition the single largest contributor to child mortality.",
+	"Protein energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies another 84,000."
 }
 
 funFactsBadWater = {
-"Unsafe water, sanitation, and hygiene are blamed for 842 000 diarrhoeal deaths each year.",
-"Contaminated drinking-water sources cause about 485 000 diarrhoeal deaths annually.",
-"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
+	"Unsafe water, sanitation, and hygiene are blamed for 842,000 diarrhoeal deaths each year.",
+	"Contaminated drinking-water sources cause about 485,000 diarrhoeal deaths annually.",
+	"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
 }
 
 funFactsThrist = {
@@ -39,15 +39,15 @@ funFactsThrist = {
 }
 
 funFactsTornado = {
-"The United States has roughly 60 tornado related deaths annually.",
-"March 18, 1925 Tri-State tornado killed 695 people across Missouri, Illinois and Indiana.",
-"Deadliest tornado in world history: On April 26, 1989, a tornado in Bangladesh claimed at least 1,300 lives."
+	"The United States has roughly 60 tornado related deaths annually.",
+	"The 1925 Tri-State tornado killed 695 people across Missouri, Illinois and Indiana.",
+	"Deadliest tornado in world history: In 1989, a tornado in Bangladesh claimed at least 1,300 lives."
 }
 
 funFactsTsunami = {
-"The 2004 Indian Ocean tsunami alone killed approximately 227 898 people across 14 countries.",
-"The 2011 Great East Japan tsunami resulted in over 18 500 confirmed deaths, making it the deadliest natural disaster in Japan since 1923. ",
-"Over 500 000 fatalities have been recorded worldwide from tsunamis since modern record-keeping began."
+	"The 2004 Indian Ocean tsunami alone killed approximately 227,898 people across 14 countries.",
+	"The 2011 Great East Japan tsunami resulted in over 18,500 confirmed deaths, making it the deadliest natural disaster in Japan since 1923.",
+	"Over 500,000 fatalities have been recorded worldwide from tsunamis since modern record-keeping began."
 }
 
 function hcenter(s)

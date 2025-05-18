@@ -135,7 +135,7 @@ function _init()
 		y = 208,
 		fx = false,
 		hunger = 5,
-		thirst = 5
+		thirst = 4
 	}
 
 	function Player:celx()
@@ -182,47 +182,10 @@ function _init()
 		self.hunger = clamp(self.hunger + amount, 0, 5)
 	end
 
-	function Player:plant()
-		local cx = self:celx()
-		local cy = self:cely()
+	function Player:plant(amount)
 		
-		for i=1,#plants do
-			if plants[i].x == cx and plants[i].y == cy then
-				return
-			end
-		end
-		
-		local seed = {}
-		seed.x = cx
-		seed.y = cy
-		seed.growth = 0
-		seed.growthRate = 350
-		seed.maxGrowth = 300
-		seed.stage = 1
-		
-		local types = {"Carrot", "Radish"}
-		seed.type = types[flr(rnd(#types))+1]
-		
-		add(plants, seed)
 	end
 
-	function Player:harvest()
-		local cx = self:celx()
-		local cy = self:cely()
-		
-		for i=#plants,1,-1 do
-			if plants[i].x == cx and plants[i].y == cy and plants[i].stage == 3 then
-				self:eat(1)
-				self.thirst(1)
-				deli(plants, i)
-				return true
-			end
-		end
-		
-		return false
-	end
-
-	plants = {}
 	tornadoes = {}
 
 	Tornado = {
@@ -297,8 +260,8 @@ function _update()
 
 		-- thirst drains when moving
 		Player.thirst_timer += 1
-		if Player.thirst_timer >= 215 then
-			Player.thirst = max(0, Player.thirst - 0.5)
+		if Player.thirst_timer >= 150 then
+			Player.thirst = max(0, Player.thirst - 1)
 			Player.thirst_timer = 0
 		end
 	end
@@ -322,23 +285,6 @@ function _update()
 
 		if mget(x, y) == 39 or mget(x, y) == 40 or mget(x, y) == 55 or mget(x, y) == 56 then
 			Player:plant()
-		end
-	end
-
-	-- harvest and eat plant
-	if btn(5) then
-		Player:harvest()
-	end
-
-	-- update plants
-	for i=1,#plants do
-		local plant = plants[i]
-		if plant.stage < 3 then
-			plant.growth += 1
-			if plant.growth >= plant.growthRate then
-				plant.stage += 1
-				plant.growth = 0
-			end
 		end
 	end
 
@@ -389,25 +335,6 @@ function _draw()
 	doshake()
 	camera(Player.x - 64 + shakex, Player.y - 64 + shakey)
 	map(0, 0, 0, 0, 200, 200)
-
-	-- draw plants
-	for i=1,#plants do
-		local plant = plants[i]
-		local sprite = 0
-		
-		if plant.type == "Carrot" then
-			if plant.stage == 1 then sprite = 87
-			elseif plant.stage == 2 then sprite = 71
-			else sprite = 117 end
-		else
-			if plant.stage == 1 then sprite = 86
-			elseif plant.stage == 2 then sprite = 70
-			else sprite = 116 end
-		end
-		
-		spr(sprite, plant.x * 8, plant.y * 8)
-	end
-
 	palt(black, false)
 	palt(green, true)
 	spr(68, Player.x - 8, Player.y - 8, 2, 2, Player.fx)

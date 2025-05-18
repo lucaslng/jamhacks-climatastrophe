@@ -319,7 +319,7 @@ function _update()
 		local x = Player:celx()
 		local y = Player:cely()
 
-		if mget(x, y) == 39 or mget(x, y) == 40 or mget(x, y) == 55 or mget(x, y) == 56 then
+		if mget(x, y) == 35 or mget(x, y) == 36 then
 			Player:plant()
 		end
 	end

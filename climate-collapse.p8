@@ -149,10 +149,10 @@ function _init()
 	-- randomly give player either 3 radish seeds or 3 carrot seeds
 	local seed_type = flr(rnd(2)) + 1
 	if seed_type == SEED_RADISH then
-		Player.hotbar[SEED_RADISH] = 3
+		Player.hotbar[SEED_RADISH] = 2
 		Player.current_seed = SEED_RADISH
 	else
-		Player.hotbar[SEED_CARROT] = 3
+		Player.hotbar[SEED_CARROT] = 2
 		Player.current_seed = SEED_CARROT
 	end
 

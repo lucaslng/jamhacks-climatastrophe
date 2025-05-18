@@ -241,7 +241,7 @@ function _update()
 	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("You died to a tsunami!") end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
 
-	if rnd(360) <= 1 then shake = 0.8 end
+	if rnd(400) <= 1 then shake = 0.6 end
 	
 end
 

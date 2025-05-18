@@ -348,7 +348,7 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 35 or mget(x, y) == 36 then
-			if Player.hotbar[SEED_RADISH] > 0 or Player.hotbar[SEED_CARROT] then
+			if (Player.hotbar[SEED_RADISH] or 0) > 0 or (Player.hotbar[SEED_CARROT] or 0) > 0 then
 				Player:plant()
 			end
 		end

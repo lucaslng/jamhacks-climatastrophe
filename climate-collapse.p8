@@ -237,10 +237,23 @@ function _init()
 		local cy = self:cely()
 		
 		for i=#plants,1,-1 do
-			if plants[i].x == cx and plants[i].y == cy and plants[i].stage == 3 then
+			local plant = plants[i]
+			if plant.x == cx and plant.y == cy and plant.stage == 3 then
 				self:eat(1)
 				self:drink(1)
-				Player.hotbar[SEED_RADISH] += 2
+				
+				if plant.type == "Radish" then
+					if not self.hotbar[SEED_RADISH] then
+						self.hotbar[SEED_RADISH] = 0
+					end
+					self.hotbar[SEED_RADISH] += 2
+				elseif plant.type == "Carrot" then
+					if not self.hotbar[SEED_CARROT] then
+						self.hotbar[SEED_CARROT] = 0
+					end
+					self.hotbar[SEED_CARROT] += 2
+				end
+				
 				deli(plants, i)
 				return true
 			end

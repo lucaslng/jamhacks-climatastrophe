@@ -240,7 +240,7 @@ function _init()
 			if plants[i].x == cx and plants[i].y == cy and plants[i].stage == 3 then
 				self:eat(1)
 				self:drink(1)
-				Player.hotbar[SEED_RADISH] += 1
+				Player.hotbar[SEED_RADISH] += 2
 				deli(plants, i)
 				return true
 			end

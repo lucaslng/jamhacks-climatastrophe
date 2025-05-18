@@ -55,8 +55,8 @@ function _init()
 	sfx(0)
 	sfx(1)
 	Player = {
-		x = 200,
-		y = 200,
+		x = 384,
+		y = 208,
 		fx = false,
 		hunger = 5,
 		thirst = 4

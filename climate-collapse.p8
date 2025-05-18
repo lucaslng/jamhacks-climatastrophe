@@ -35,7 +35,7 @@ funFactsBadWater = {
 	"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
 }
 
-funFactsThrist = {
+funFactsThirst = {
 	"785 million people worldwide still lack even a basic drinking-water service, including 144 million who rely on untreated surface water for daily needs",
 }
 

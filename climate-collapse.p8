@@ -196,6 +196,8 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 8 then
+			die("You died of drinking dirty water.")
+		elseif mget(x, y) == 102 then
 			Player:drink(1)
 		end
 	end

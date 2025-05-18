@@ -74,7 +74,7 @@ end
 function print_wrap(s, x, y)
     local text = tostring(s)
     local words = split(text, " ")
-    local line = ""
+    local line = "Fun fact:"
     local newY = y
 
     for _, w in ipairs(words) do

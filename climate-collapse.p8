@@ -20,6 +20,36 @@ peach = 15
 
 items = {}
 
+-- facts are all found by ChatGPT --
+
+funFactsHunger = {
+"Undernutrition underlies 45% of all child deaths globally about 3.1 million children under five each year.",
+"Six million children die from hunger every year, making malnutrition the single largest contributor to child mortality.",
+"Protein energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies another 84 000."
+}
+
+funFactsBadWater = {
+"Unsafe water, sanitation, and hygiene are blamed for 842 000 diarrhoeal deaths each year.",
+"Contaminated drinking-water sources cause about 485 000 diarrhoeal deaths annually.",
+"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
+}
+
+funFactsThrist = {
+	"785 million people worldwide still lack even a basic drinking-water service, including 144 million who rely on untreated surface water for daily needs",
+}
+
+funFactsTornado = {
+"The United States has roughly 60 tornado related deaths annually.",
+"March 18, 1925 Tri-State tornado killed 695 people across Missouri, Illinois and Indiana.",
+"Deadliest tornado in world history: On April 26, 1989, a tornado in Bangladesh claimed at least 1,300 lives."
+}
+
+funFactsTsunami = {
+"The 2004 Indian Ocean tsunami alone killed approximately 227 898 people across 14 countries.",
+"The 2011 Great East Japan tsunami resulted in over 18 500 confirmed deaths, making it the deadliest natural disaster in Japan since 1923. ",
+"Over 500 000 fatalities have been recorded worldwide from tsunamis since modern record-keeping began."
+}
+
 function hcenter(s)
 	return 64 - #s * 2
 end
@@ -40,9 +70,57 @@ function intro()
 	end
 end
 
-function die(message)
-	cls()
-	stop(message, hcenter(message), vcenter(), red)
+function print_wrap(s, x, y)
+    local text = tostring(s)
+    local words = split(text, " ")
+    local line = ""
+    local newY = y
+
+    for _, w in ipairs(words) do
+        w = tostring(w)
+        if #line + #w + 1 > 30 then
+            print(line, x, newY, red)
+            newY += 6
+            line = w
+        else
+            if line == "" then
+                line = w
+            else
+                line = line.." "..w
+            end
+        end
+    end
+
+    if #line > 0 then
+        print(line, x, newY, red)
+    end
+	
+	print()
+end
+
+function die(death, message)
+    cls()
+    print(message, hcenter(message), vcenter(), red)
+
+    local facts
+    if death == "hunger" then 
+        facts = funFactsHunger
+    elseif death == "thirst" then 
+        facts = funFactsThirst
+	elseif death == "bad water" then
+		facts = funFactsBadWater
+    elseif death == "tornado" then 
+        facts = funFactsTornado
+    elseif death == "tsunami" then 
+        facts = funFactsTsunami
+    else 
+        return
+    end 
+
+    local fact = rnd(facts)
+    color(red)
+    print_wrap(fact, 5, vcenter()+20)
+    stop()
 end
 
 function _init()
@@ -171,8 +249,8 @@ function _update()
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
 
-	if Player.thirst <= 0 then die("you died from lack of water") end
-	if Player.hunger <= 0 then die("you died from hunger!") end
+	if Player.thirst <= 0 then die("thirst", "you died from lack of water") end
+	if Player.hunger <= 0 then die("hunger", "you died from hunger!") end
 
 	if moved then
 		-- hunger drains when moving
@@ -196,10 +274,10 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 8 then
-			die("You died of drinking dirty water.")
+			die("bad water", "You drank contaminated water.")
 		elseif mget(x, y) == 102 then
 			Player:drink(1)
-		end
+		end 
 	end
 
 	-- plant only if the player is standing on dirt
@@ -225,7 +303,7 @@ function _update()
 		end
 	end
 
-	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 16 and abs(Player.y - t.y) <= 16) then die("you died to a tornado!") end end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 16 and abs(Player.y - t.y) <= 16) then die("tornado", "you died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
 	if rnd(100) <= 1 then
@@ -238,7 +316,7 @@ function _update()
 		add(tsunamies, tsunami)
 	end
 
-	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("You died to a tsunami!") end end)
+	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("tsunami", "You died to a tsunami!") end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
 
 	if rnd(360) <= 1 then shake = 0.8 end

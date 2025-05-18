@@ -213,7 +213,6 @@ function _init()
 		for i=#plants,1,-1 do
 			if plants[i].x == cx and plants[i].y == cy and plants[i].stage == 3 then
 				self:eat(1)
-				self.thirst(1)
 				deli(plants, i)
 				return true
 			end

@@ -23,9 +23,9 @@ items = {}
 -- facts are all found by ChatGPT --
 
 funFactsHunger = {
-"Undernutrition underlies 45% of all child deaths globallyヌ█⬆️about 3.1 million children under five each year.",
+"Undernutrition underlies 45% of all child deaths globally about 3.1 million children under five each year.",
 "Six million children die from hunger every year, making malnutrition the single largest contributor to child mortality.",
-"Proteinヌ█⧗energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies (e.g. iodine, iron) another 84 000."
+"Protein energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies another 84 000."
 }
 
 funFactsBadWater = {
@@ -34,12 +34,12 @@ funFactsBadWater = {
 		"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
 }
 
-funFactsThrist = {
+funFactsThirst = {
 	"785 million people worldwide still lack even a basic drinking-water service, including 144 million who rely on untreated surface water for daily needs",
 }
 
 funFactsTornado = {
-"The US has roughly 60 tornadoヌ█…related deaths annually.",
+"The US has roughly 60 tornado related deaths annually.",
 "March 18, 1925 'Tri-State' tornado killed 695 people across Missouri, Illinois and Indiana.",
 "Deadliest tornado in world history: On April 26, 1989, a tornado in Bangladesh claimed at least 1,300 lives."
 }
@@ -272,7 +272,7 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 8 then
-			die("bad water", "You died of drinking dirty water.")
+			die("bad water", "You drank contaminated water.")
 		elseif mget(x, y) == 102 then
 			Player:drink(1)
 		end

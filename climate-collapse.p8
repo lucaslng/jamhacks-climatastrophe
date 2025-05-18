@@ -20,36 +20,6 @@ peach = 15
 
 items = {}
 
--- facts are all found by ChatGPT --
-
-funFactsHunger = {
-"Undernutrition underlies 45% of all child deaths globally about 3.1 million children under five each year.",
-"Six million children die from hunger every year, making malnutrition the single largest contributor to child mortality.",
-"Protein energy malnutrition caused 600 000 deaths in 2010, and micronutrient deficiencies another 84 000."
-}
-
-funFactsBadWater = {
-    "Unsafe water, sanitation, and hygiene are blamed for 842 000 diarrhoeal deaths each year.",
-    "Contaminated drinking-water sources cause about 485 000 diarrhoeal deaths annually.",
-		"Waterborne diseases overall kill roughly 1.5 million people per year worldwide."
-}
-
-funFactsThirst = {
-	"785 million people worldwide still lack even a basic drinking-water service, including 144 million who rely on untreated surface water for daily needs",
-}
-
-funFactsTornado = {
-"The US has roughly 60 tornado related deaths annually.",
-"March 18, 1925 'Tri-State' tornado killed 695 people across Missouri, Illinois and Indiana.",
-"Deadliest tornado in world history: On April 26, 1989, a tornado in Bangladesh claimed at least 1,300 lives."
-}
-
-funFactsTsunami = {
-"The 2004 Indian Ocean tsunami alone killed approximately 227 898 people across 14 countries.",
-"The 2011 Great East Japan tsunami resulted in over 18 500 confirmed deaths, making it the deadliest natural disaster in Japan since 1923. ",
-"Over 500 000 fatalities have been recorded worldwide from tsunamis since modern record-keeping began."
-}
-
 function hcenter(s)
 	return 64 - #s * 2
 end
@@ -70,55 +40,9 @@ function intro()
 	end
 end
 
-function print_wrap(s, x, y)
-    local text = tostring(s)
-    local words = split(text, " ")
-    local line = ""
-    local newY = y
-
-    for _, w in ipairs(words) do
-        w = tostring(w)
-        if #line + #w + 1 > 30 then
-            print(line, x, newY, red)
-            newY += 6
-            line = w
-        else
-            if line == "" then
-                line = w
-            else
-                line = line.." "..w
-            end
-        end
-    end
-
-    if #line > 0 then
-        print(line, x, newY, red)
-    end
-end
-
-function die(death, message)
-    cls()
-    print(message, hcenter(message), vcenter(), red)
-
-    local facts
-    if death == "hunger" then 
-      facts = funFactsHunger
-    elseif death == "thirst" then 
-      facts = funFactsThirst
-		elseif death == "bad water" then
-			facts = funFactsBadWater
-    elseif death == "tornado" then 
-      facts = funFactsTornado
-    elseif death == "tsunami" then 
-      facts = funFactsTsunami
-    else 
-      return
-    end 
-
-    local fact = rnd(facts)
-    color(red)
-    print_wrap(fact, 2, vcenter()+20)
-    stop()
+function die(message)
+	cls()
+	stop(message, hcenter(message), vcenter(), red)
 end
 
 function _init()
@@ -247,8 +171,8 @@ function _update()
 	if Player.hunger_timer == nil then Player.hunger_timer = 0 end
 	if Player.thirst_timer == nil then Player.thirst_timer = 0 end
 
-	if Player.thirst <= 0 then die("thirst", "you died from lack of water") end
-	if Player.hunger <= 0 then die("hunger", "you died from hunger!") end
+	if Player.thirst <= 0 then die("you died from lack of water") end
+	if Player.hunger <= 0 then die("you died from hunger!") end
 
 	if moved then
 		-- hunger drains when moving
@@ -272,7 +196,7 @@ function _update()
 		local y = Player:cely()
 
 		if mget(x, y) == 8 then
-			die("bad water", "You drank contaminated water.")
+			die("You died of drinking dirty water.")
 		elseif mget(x, y) == 102 then
 			Player:drink(1)
 		end
@@ -283,7 +207,7 @@ function _update()
 		local x = Player:celx()
 		local y = Player:cely()
 
-		if mget(x, y) == 39 or mget(x, y) == 40 or mget(x, y) == 55 or mget(x, y) == 56 then
+		if mget(x, y) == 35 or mget(x, y) == 36 then
 			Player:plant()
 		end
 	end
@@ -301,7 +225,7 @@ function _update()
 		end
 	end
 
-	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 16 and abs(Player.y - t.y) <= 16) then die("tornado", "you died to a tornado!") end end)
+	foreach(tornadoes, function(t) t.x += t.vx t.y += t.vy t.lifetime -= 1 if (abs(Player.x - t.x) <= 16 and abs(Player.y - t.y) <= 16) then die("you died to a tornado!") end end)
 	if tornadoes[1] != nil and tornadoes[1].lifetime <= 0 then deli(tornadoes, 1) end
 
 	if rnd(100) <= 1 then
@@ -314,7 +238,7 @@ function _update()
 		add(tsunamies, tsunami)
 	end
 
-	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("tsunami", "You died to a tsunami!") end end)
+	foreach(tsunamies, function(t) t.x += t.v t.lifetime -= 1 if mget(flr(t.x / 8), flr(t.y / 8)) != 8 then t.lifetime -= 2 end if t.x < Player.x and Player.x < t.x + 16 and t.y < Player.y and Player.y < t.y + t.height then die("You died to a tsunami!") end end)
 	if tsunamies[1] != nil and tsunamies[1].lifetime <= 0 then deli(tsunamies, 1) end
 
 	if rnd(360) <= 1 then shake = 0.8 end
@@ -411,13 +335,13 @@ end
 
 __gfx__
 000000000b3bb3b065555666bbbbbbbbbbbbbbbbbbb1bbbbbbbbbbbb11111111cccccccc00000000000000000000000000000000000000000000000000000000
-000000003bb3bbbb66556665bbb00bbbbbbbbbbbbb1c1bbbbbbbbbbb11111111cccccccc00000000000000000000000000000000000000000000000100000000
-0000000003333bb066666655bb0880bbbbbbbbbbbb1c1bbbbbbbbbbb11111111ccccc4cc00000000000000000000000000000000000000001111100000000000
-0000000000eeee0056655666b08f890bbbbbbbbbb1ccc1bbbbbbbbbb11111111cc3ccccc0000000000000000000000000000000000000001c777710000000000
-0000000002e0e0e066665566b0884490bbbbbbbbb1ccc1bbbbbbbbbb11111111cccccccc000000000000000000000000000000000000001ccccc771000000000
-00000000022eeee066566666bb044440bbbbbbbb17cccc1bbbbbbbbb11111111cccccccc00000000000000000000000000000000000001ccccccc71000000000
-000000000022220055665665bbb04440bbbbbbbb17cccc1bbbbbbbbb11111111cccc4ccc000000000000000000000000000000000000017ccccccc7100000000
-000000000002200066655556bbbb000700bbbbbbb17cc1bbbbbbbbbb11111111cccccccc00000000000000000000000000000000000017ccc11ccc1000000000
+000000003bb3bbbb66556665bbb00bbbbbbbbbbbbb1c1bbbbbbbbbbb11111111cccccccc00000000000000000000000000000000000000000000000000000001
+0000000003333bb066666655bb0880bbbbbbbbbbbb1c1bbbbbbbbbbb11111111cccc4ccc00000000000000000000000000000000000000000000000011111000
+0000000000eeee0056655666b08f890bbbbbbbbbb1ccc1bbbbbbbbbb11111111cccccccc000000000000000000000000000000000000000000000001c7777100
+0000000002e0e0e066665566b0884490bbbbbbbbb1ccc1bbbbbbbbbb11111111cccccccc00000000000000000000000000000000000000000000001ccccc7710
+00000000022eeee066566666bb044440bbbbbbbb17cccc1bbbbbbbbb11111111cc4ccccc0000000000000000000000000000000000000000000001ccccccc710
+000000000022220055665665bbb04440bbbbbbbb17cccc1bbbbbbbbb11111111ccccc3cc00000000000000000000000000000000000000000000017ccccccc71
+000000000002200066655556bbbb000700bbbbbbb17cc1bbbbbbbbbb11111111cccccccc0000000000000000000000000000000000000000000017ccc11ccc10
 4442d2254442d22500000000bbbbbbb070bbbbbbbb111bbbbbbbbbbb0000000000000000000000000000000000000000000000000001cccc10011c1000000000
 5445dd425445dd4200000000bbbbbbb00bbbbbbbbbbbbbbbbbbbbbbb0000000000000000000000000000000000000000000000000001ccc10000010000000000
 252244422522444200000000bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb000000000000000000000000000000000000000000000000001cc7c10000100000000000
@@ -539,7 +463,7 @@ __gfx__
 70707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070
 70707070707070707070707070707070707070707070707070707070707070707070707070707070700000000000000000000000000000000000000000000000
 __gff__
-0000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080808080000000000000000000000000808080800000000000000000000000008080808000000000000000000000000080808080000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 0707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070700000000000000000000

@@ -513,8 +513,10 @@ function draw_hotbar()
 	-- draw selected seed in the hotbar
 	if Player.hotbar[SEED_RADISH] and Player.hotbar[SEED_RADISH] > 0 then
 		spr(86, slot_x, slot_y)
+		print(Player.hotbar[SEED_RADISH], slot_x + slot_size + 2, slot_y + 2, white)
 	elseif Player.hotbar[SEED_CARROT] and Player.hotbar[SEED_CARROT] > 0 then
 		spr(87, slot_x, slot_y)
+		print(Player.hotbar[SEED_CARROT], slot_x + slot_size + 2, slot_y + 2, white)
 	end
 end
 
